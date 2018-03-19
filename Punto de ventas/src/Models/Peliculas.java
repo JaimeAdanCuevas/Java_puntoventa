@@ -11,8 +11,9 @@ package Models;
  */
 public class Peliculas {
     
-    private int IdPelicula;
+    private int Id_Pelicula;
     private String ID;
+    private String Nombre;
     private String Descripcion;
     private String precioUni;
     private String precioMay;
@@ -23,22 +24,30 @@ public class Peliculas {
         
     }
 
-   /* public Peliculas(int IdPelicula, String ID, String Descripcion, String precioUni, String precioMay, String Sala, String Categoria) {
-        this.IdPelicula = IdPelicula;
-        this.ID = ID;
-        this.Descripcion = Descripcion;
-        this.precioUni = precioUni;
-        this.precioMay = precioMay;
-        this.Sala = Sala;
-        this.Categoria = Categoria;
-    }*/
 
-    public int getIdPelicula() {
-        return IdPelicula;
+    public String getNombre() {
+        return Nombre;
     }
 
-    public void setIdPelicula(int IdPelicula) {
-        this.IdPelicula = IdPelicula;
+    /* public Peliculas(int IdPelicula, String ID, String Descripcion, String precioUni, String precioMay, String Sala, String Categoria) {
+    this.IdPelicula = IdPelicula;
+    this.ID = ID;
+    this.Descripcion = Descripcion;
+    this.precioUni = precioUni;
+    this.precioMay = precioMay;
+    this.Sala = Sala;
+    this.Categoria = Categoria;
+    }*/
+    public void setNombre(String Nombre) {
+        this.Nombre = Nombre;
+    }
+
+    public int getId_Pelicula() {
+        return Id_Pelicula;
+    }
+
+    public void setId_Pelicula(int IdPelicula) {
+        this.Id_Pelicula = IdPelicula;
     }
 
     public String getID() {

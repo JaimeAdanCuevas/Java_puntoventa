@@ -10,6 +10,7 @@ import ModelClass.ImagenBanner;
 import ModelClass.Pelicula;
 import ModelClass.TextFieldEvent;
 import Models.Clientes;
+import Models.Peliculas;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -24,8 +25,9 @@ public class Sistema extends javax.swing.JFrame {
     Cliente cliente = new Cliente();
     Pelicula pelicula = new Pelicula();
     List<Clientes> numCliente;
+    List<Peliculas> numPelicula;
     private String accion = "insert", Id = "",Dia,Mes,Ano,funcionCatDpt,IdCat,dpt;
-    private int pageSize = 6, tab, maxReg, pageCount, currentPage, numReg;
+    private int pageSize = 5, tab, maxReg, pageCount, currentPage, numReg, numPagi = 0;
     private int startRec, endRec, numRegistro = 0;
     /**
      * Creates new form Sistema
@@ -62,6 +64,20 @@ public class Sistema extends javax.swing.JFrame {
             pageCount += 1;
         }
         Label_PaginasClientes.setText("Paginas " + "1" + "/ " + String.valueOf(pageCount));
+    }
+     private void cargarDatos2(){
+        switch(tab){
+            case 2:
+                numPelicula = pelicula.getPelicula();
+                pelicula.searchPelicula(Table_ComprasPDT, "", numRegistro, pageSize);
+                maxReg = numPelicula.size();
+                break;
+        }
+        pageCount = (maxReg / pageSize);
+        if((maxReg % pageSize) > 0){
+            pageCount += 1;
+        }
+        Label_Paginas1.setText("Paginas " + "1" + "/ " + String.valueOf(pageCount));
     }
 //</editor-fold>
     
@@ -212,6 +228,8 @@ public class Sistema extends javax.swing.JFrame {
         Label_CategoriaPDT = new javax.swing.JLabel();
         ComboBox_SalaPeli = new javax.swing.JComboBox();
         ComboBox_Categoria = new javax.swing.JComboBox();
+        TextField_nombrePe = new javax.swing.JTextField();
+        Label_nombrePe = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         Table_ComprasPDT =   Table_ComprasPDT = new javax.swing.JTable(){
@@ -307,7 +325,6 @@ public class Sistema extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema punto de ventas");
-        setPreferredSize(new java.awt.Dimension(996, 745));
 
         PanelBanner.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         PanelBanner.setForeground(new java.awt.Color(51, 51, 51));
@@ -967,6 +984,11 @@ public class Sistema extends javax.swing.JFrame {
         Button_CancelarCLT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Cancelar.png"))); // NOI18N
         Button_CancelarCLT.setText("Cancelar");
         Button_CancelarCLT.setBorder(null);
+        Button_CancelarCLT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_CancelarCLTActionPerformed(evt);
+            }
+        });
 
         Label_IDCliente.setForeground(new java.awt.Color(102, 102, 102));
         Label_IDCliente.setText("ID");
@@ -1446,6 +1468,21 @@ public class Sistema extends javax.swing.JFrame {
             }
         });
 
+        TextField_nombrePe.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TextField_nombrePeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextField_nombrePeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                TextField_nombrePeKeyTyped(evt);
+            }
+        });
+
+        Label_nombrePe.setText("Nombre pelicula");
+        Label_nombrePe.setToolTipText("");
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
@@ -1454,38 +1491,47 @@ public class Sistema extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(Label_CodigoPDT)
-                            .addComponent(TextField_CodigoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Label_DescripcionPDT)
-                            .addComponent(TextField_DescripcionPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Label_UnidadPDT))
+                        .addComponent(jLabel11)
                         .addContainerGap(79, Short.MAX_VALUE))
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TextField_PrecioUnidadPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Label_MayoreoPDT)
-                            .addComponent(Label_SalasPeli)
                             .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addComponent(Button_GuardarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(Button_EliminarCLT1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(Button_CancelarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(Label_CategoriaPDT)
+                            .addComponent(Label_CodigoPDT)
+                            .addComponent(TextField_CodigoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Label_DescripcionPDT)
+                            .addComponent(TextField_DescripcionPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Label_UnidadPDT)
+                            .addComponent(TextField_PrecioUnidadPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Label_MayoreoPDT)
+                            .addComponent(TextField_nombrePe, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Label_nombrePe)
                             .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(ComboBox_Categoria, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ComboBox_SalaPeli, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(TextField_PrecioMayoreoPDT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)))
-                        .addGap(0, 29, Short.MAX_VALUE))))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel11Layout.createSequentialGroup()
+                                    .addComponent(Label_SalasPeli)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Label_CategoriaPDT))
+                                .addComponent(TextField_PrecioMayoreoPDT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addComponent(ComboBox_SalaPeli, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(22, 22, 22)
+                                .addComponent(ComboBox_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Label_nombrePe)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(TextField_nombrePe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Label_CodigoPDT)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextField_CodigoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1502,19 +1548,19 @@ public class Sistema extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextField_PrecioMayoreoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Label_SalasPeli)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Label_SalasPeli)
+                    .addComponent(Label_CategoriaPDT))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ComboBox_SalaPeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Label_CategoriaPDT)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ComboBox_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComboBox_SalaPeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboBox_Categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Button_GuardarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Button_EliminarCLT1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Button_CancelarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40))
+                .addGap(87, 87, 87))
         );
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -1612,35 +1658,37 @@ public class Sistema extends javax.swing.JFrame {
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
                     .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TextField_BuscarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Label)
-                        .addGap(0, 262, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TextField_BuscarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(Label)
+                                .addGap(0, 262, Short.MAX_VALUE))))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addGap(262, 262, 262)
+                                .addComponent(Label_Paginas1))
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addGap(88, 88, 88)
+                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel14)
+                                    .addGroup(jPanel13Layout.createSequentialGroup()
+                                        .addComponent(Button_PrimeroPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(Button_AnteriorPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Button_SiguientePDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Button_UltimoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGap(175, 175, 175)
-                        .addComponent(jLabel14))
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addComponent(Button_PrimeroPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Button_AnteriorPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Button_SiguientePDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Button_UltimoPDT, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGap(208, 208, 208)
-                        .addComponent(Label_Paginas1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1651,9 +1699,9 @@ public class Sistema extends javax.swing.JFrame {
                     .addComponent(TextField_BuscarPDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(1, 1, 1)
                 .addComponent(Label_Paginas1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Button_AnteriorPDT)
                     .addComponent(Button_PrimeroPDT)
@@ -2304,6 +2352,7 @@ public class Sistema extends javax.swing.JFrame {
         Button_Cliente.setEnabled(true);
         Button_Cat_Dpt.setEnabled(true);
         Config.setEnabled(true);
+        cargarDatos2();
     }//GEN-LAST:event_Button_PeliculasActionPerformed
 
     private void Button_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_ClienteActionPerformed
@@ -2533,6 +2582,12 @@ public class Sistema extends javax.swing.JFrame {
                 TextField_ApellidoCliente.setText("");
                 TextField_DireccionCliente.setText("");
                TextField_TelefonoCliente.setText("");
+               
+               Label_IDCliente.setForeground(new Color(102,102,102));
+               Label_ApellidoCliente.setForeground(new Color(102,102,102));
+               Label_NombreCliente.setForeground(new Color(102,102,102));
+               Label_TelefonoCliente.setForeground(new Color(102,102,102));
+               Label_DireccionCliente.setForeground(new Color(102,102,102));
                 
             }else{
                 JOptionPane.showMessageDialog(null,"ha ocurrido un error");
@@ -2546,18 +2601,53 @@ public class Sistema extends javax.swing.JFrame {
     
     private void Button_PrimeroCLTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_PrimeroCLTActionPerformed
         // TODO add your handling code here:
+        numPagi = 0;
+        Label_PaginasClientes.setText("Paginas " + "1" + "/ " + String.valueOf(pageCount));
+        cliente.searchCliente(Table_Clientes, "", numPagi, pageSize);
+        
     }//GEN-LAST:event_Button_PrimeroCLTActionPerformed
 
     private void Button_AnteriorCLTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AnteriorCLTActionPerformed
         // TODO add your handling code here:
+        if(pageCount != 1){
+            if(numPagi > 0){
+                if(pageCount == numPagi){
+                    numPagi -= 1;
+                }
+                Label_PaginasClientes.setText("Paginas " + String.valueOf(numPagi)+
+                        "/ " + String.valueOf(pageCount));
+                numPagi -= 1;
+                numRegistro = pageSize * numPagi;
+                cliente.searchCliente(Table_Clientes, "", numRegistro, pageSize);
+            }
+        }
     }//GEN-LAST:event_Button_AnteriorCLTActionPerformed
 
     private void Button_SiguienteCLTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_SiguienteCLTActionPerformed
         // TODO add your handling code here:
+        if(pageCount != 1){
+            if(numPagi < pageCount){
+                if(numPagi == 0){
+                    numPagi += 1;
+                }
+                numRegistro = pageSize * numPagi;
+                cliente.searchCliente(Table_Clientes, "", numRegistro, pageSize);
+                numPagi += 1;
+                Label_PaginasClientes.setText("Paginas " + String.valueOf(numPagi)+
+                        "/ " + String.valueOf(pageCount));
+            }
+        }
     }//GEN-LAST:event_Button_SiguienteCLTActionPerformed
 
     private void Button_UltimoCLTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_UltimoCLTActionPerformed
         // TODO add your handling code here:
+       numPagi = pageCount;
+       numPagi--;
+       numRegistro = pageSize * numPagi;
+       Label_PaginasClientes.setText("Paginas " + String.valueOf(pageCount)+
+                        "/ " + String.valueOf(pageCount));
+       cliente.searchCliente(Table_Clientes, "", numRegistro, pageSize);
+       numPagi = pageCount;
     }//GEN-LAST:event_Button_UltimoCLTActionPerformed
 
     private void TextField_CodigoPDTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextField_CodigoPDTKeyPressed
@@ -2604,8 +2694,14 @@ public class Sistema extends javax.swing.JFrame {
             Label_CategoriaPDT.setText("Categoria");
             Label_CategoriaPDT.setForeground(Color.red);
             ComboBox_Categoria.requestFocus();
+        }else{
+            if(TextField_nombrePe.getText().equals("")){
+            Label_nombrePe.setText("Nombre pelicula");
+            Label_nombrePe.setForeground(Color.red);
+            TextField_nombrePe.requestFocus();
             }else{//Falta acabar 
                 if(accion.equals("insert")){
+                String Nombre =TextField_nombrePe.getText();
                 String ID = TextField_CodigoPDT.getText();
                 String Descripcion = TextField_DescripcionPDT.getText();
                 String precioUni = TextField_PrecioUnidadPDT.getText();
@@ -2614,14 +2710,14 @@ public class Sistema extends javax.swing.JFrame {
                 String Categoria = ComboBox_Categoria.getSelectedItem().toString();
                 
                 try{
-                 pelicula.insertPelicula(ID, Descripcion, precioUni, precioMay, Sala, Categoria);
+                 pelicula.insertPelicula(Nombre ,ID, Descripcion, precioUni, precioMay, Sala, Categoria);
                  JOptionPane.showMessageDialog(this, "Pelicula Ingresado con exito");
                 }catch(Exception e){
                     JOptionPane.showMessageDialog(this,"ha ocurrido un error: " +  e);
                 }
                 
                 
-                
+                TextField_nombrePe.setText("");
                 TextField_CodigoPDT.setText("");
                 TextField_DescripcionPDT.setText("");
                 TextField_PrecioUnidadPDT.setText("");
@@ -2629,12 +2725,19 @@ public class Sistema extends javax.swing.JFrame {
                 ComboBox_SalaPeli.setSelectedIndex(0);
                 ComboBox_Categoria.setSelectedIndex(0);
                 
+               Label_nombrePe.setForeground(new Color(102,102,102));
+               Label_MayoreoPDT.setForeground(new Color(102,102,102));
+               Label_UnidadPDT.setForeground(new Color(102,102,102));
+               Label_DescripcionPDT.setForeground(new Color(102,102,102));
+               Label_CodigoPDT.setForeground(new Color(102,102,102));
+                
             }else{
                 JOptionPane.showMessageDialog(null,"ha ocurrido un error");
             }
         }
         }
         }
+             }
              }
              }
         }
@@ -2716,7 +2819,59 @@ public class Sistema extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ComboBox_CategoriaActionPerformed
 
-    /**
+    private void TextField_nombrePeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextField_nombrePeKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextField_nombrePeKeyPressed
+
+    private void TextField_nombrePeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextField_nombrePeKeyReleased
+        // TODO add your handling code here:
+        if(TextField_nombrePe.getText().equals("")){
+            Label_nombrePe.setForeground(new Color(102,102,102));
+        }else{
+            Label_nombrePe.setText("Nombre pelicula");
+            Label_nombrePe.setForeground(new Color(0, 153, 51));
+        }
+    }//GEN-LAST:event_TextField_nombrePeKeyReleased
+
+    private void TextField_nombrePeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextField_nombrePeKeyTyped
+        // TODO add your handling code here:
+        evento.textKeyPressWithNumbers(evt);
+    }//GEN-LAST:event_TextField_nombrePeKeyTyped
+
+    private void Button_CancelarCLTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_CancelarCLTActionPerformed
+        // TODO add your handling code here:
+        restablecerCliente();
+    }//GEN-LAST:event_Button_CancelarCLTActionPerformed
+    
+    private void restablecerCliente(){
+        accion = "insert";
+        TextField_IDCliente.setText("");
+        TextField_NombreCliente.setText("");
+        TextField_ApellidoCliente.setText("");
+        TextField_DireccionCliente.setText("");
+        TextField_TelefonoCliente.setText("");
+        TextField_PagosCliente.setText("");
+        
+        Label_IDCliente.setForeground(new Color(102,102,102));
+        Label_ApellidoCliente.setForeground(new Color(102,102,102));
+        Label_NombreCliente.setForeground(new Color(102,102,102));
+        Label_TelefonoCliente.setForeground(new Color(102,102,102));
+        Label_DireccionCliente.setForeground(new Color(102,102,102));
+        Label_PagoCliente.setForeground(new Color(102,102,102));
+        RadioButton_PagosCliente.setForeground(new Color(102,102,102));
+        RadioButton_IngresarCliente.setSelected(true);
+        RadioButton_IngresarCliente.setForeground(new Color(0,152,51));
+        
+        TextField_NombreCliente.setEnabled(true);
+        TextField_ApellidoCliente.setEnabled(true);
+        TextField_DireccionCliente.setEnabled(true);
+        TextField_TelefonoCliente.setEnabled(true);
+        TextField_PagosCliente.setEnabled(false);
+        
+        cargarDatos();
+    }
+    
+            /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -2751,6 +2906,7 @@ public class Sistema extends javax.swing.JFrame {
         });
     }
 
+////////    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Button_AnteriorCLT;
     private javax.swing.JButton Button_AnteriorCLT1;
@@ -2826,6 +2982,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JLabel Label_TelefonoCliente1;
     private javax.swing.JLabel Label_TelefonoCliente2;
     private javax.swing.JLabel Label_UnidadPDT;
+    private javax.swing.JLabel Label_nombrePe;
     private javax.swing.JPanel PanelBanner;
     private javax.swing.JRadioButton RadioButton_Cat;
     private javax.swing.JRadioButton RadioButton_Dpt;
@@ -2865,6 +3022,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField TextField_PrecioUnidadPDT;
     private javax.swing.JTextField TextField_SalasDpt;
     private javax.swing.JTextField TextField_TelefonoCliente;
+    private javax.swing.JTextField TextField_nombrePe;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
